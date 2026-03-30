@@ -46,6 +46,13 @@ class Property_rooms(models.Model):
 
 
 
+class CreateAdminUser(models.Model):
+    username = models.CharField(max_length=100, unique=True)
+    password = models.CharField(max_length=255)
+    is_admin = models.BooleanField(default=True)
+
+    def __str__(self):
+        return self.username
 
 
 

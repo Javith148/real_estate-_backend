@@ -13,8 +13,11 @@ SECRET_KEY = 'django-insecure-&w7o6uq340j1=8&t)*b+3y=os%_%$1ew@anai9*8lw*k)ycowa
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'e641-2405-201-e017-9148-fc97-893e-eaa6-4cb9.ngrok-free.app'
+]
 
 
 # Application definition
@@ -48,7 +51,7 @@ ROOT_URLCONF = 'backend.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR / 'templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,3 +122,8 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 CORS_ALLOW_ALL_ORIGINS = True
 
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+
+CSRF_TRUSTED_ORIGINS = [
+    "https://e641-2405-201-e017-9148-fc97-893e-eaa6-4cb9.ngrok-free.app"
+]

@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - RealEstate Admin</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/lucide@latest"></script>
+  
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      .bg-primary {
+        background-color: #1f4c6b;
+      }
+      .text-primary {
+        color: #1f4c6b;
+      }
+    </style>
+  </head>
+  <body class="bg-gray-50 overflow-hidden">
+    <div
+      class="min-h-screen bg-gradient-to-br from-white via-blue-50 to-green-50 flex items-center justify-center p-4"
+    >
+      <div
+        class="w-full max-w-6xl grid md:grid-cols-2 gap-8 items-center bg-white/40 backdrop-blur-sm p-4 rounded-3xl"
+      >
+        <!-- Illustration Side -->
+        <div class="hidden md:flex flex-col items-center justify-center p-8">
+          <div class="relative">
+            <div
+              class="w-80 h-80 bg-primary rounded-[3rem] flex items-center justify-center shadow-2xl overflow-hidden"
+            >
+              <i
+                data-lucide="building-2"
+                class="w-48 h-48 text-white opacity-20"
+              ></i>
+            </div>
+            <div
+              class="absolute -bottom-6 -right-6 w-32 h-32 bg-green-500 rounded-3xl flex items-center justify-center shadow-xl border-4 border-white"
+            >
+              <i
+                data-lucide="home"
+                class="w-16 h-16 text-white text-nowrap"
+              ></i>
+            </div>
+          </div>
+          <h2 class="mt-12 text-2xl font-bold text-primary">
+            Real Estate Admin Portal
+          </h2>
+          <p class="text-gray-600 text-center max-w-sm mt-3 leading-relaxed">
+            Manage properties, users, and bookings efficiently with our
+            all-in-one administration suite.
+          </p>
+        </div>
+
+        <!-- Login Form Side -->
+        <div
+          class="bg-white p-10 md:p-14 rounded-[2.5rem] shadow-2xl border border-gray-100"
+        >
+          <div class="flex flex-col items-center mb-10 text-center">
+            <div
+              class="w-16 h-16 bg-primary rounded-2xl flex items-center justify-center mb-5 shadow-lg shadow-primary/20"
+            >
+              <i data-lucide="building-2" class="w-8 h-8 text-white"></i>
+            </div>
+            <h1 class="text-2xl font-bold text-primary">Admin Login</h1>
+            <p class="text-gray-500 mt-2 text-sm">
+              Welcome back! Please enter your details.
+            </p>
+          </div>
+          {% if error %}
+          <p class="text-red-500 text-center mb-4 text-sm">{{ error }}</p>
+          {% endif %}
+
+          <form method="POST" class="space-y-5">
+            {% csrf_token %}
+            <!-- Username -->
+            <div>
+              <label class="text-sm font-semibold">User Name</label>
+              <input
+                type="text"
+                name="username"
+                required
+                class="w-full mt-1 p-3 border rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-200"
+                placeholder="Enter User Name"
+              />
+            </div>
+            <!-- Password -->
+            <div class="relative">
+              <label class="text-sm font-semibold">Password</label>
+              <input
+                type="password"
+                id="password"
+                name="password"
+                required
+                class="w-full mt-1 p-3 border rounded-xl pr-12 focus:outline-none focus:ring-2 focus:ring-blue-200"
+                placeholder="Enter password"
+              />
+              
+              <button
+                type="button"
+                onclick="togglePassword()"
+                class="absolute right-3 top-[38px] text-gray-500"
+              >
+                👁
+              </button>
+            </div>
+            <!-- Button -->
+            <button
+              type="submit"
+              class="w-full bg-primary text-white py-3 rounded-xl font-semibold hover:bg-[#163a52] transition"
+            >
+              Login
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      lucide.createIcons();
+    </script>
+      <script>
+      lucide.createIcons();
+
+      function togglePassword() {
+        const password = document.getElementById("password");
+        const eye = document.getElementById("eyeIcon");
+
+        if (password.type === "password") {
+          password.type = "text";
+          eye.setAttribute("data-lucide", "eye-off");
+        } else {
+          password.type = "password";
+          eye.setAttribute("data-lucide", "eye");
+        }
+
+        lucide.createIcons(); 
+      }
+    </script>
+  </body>
+</html>
