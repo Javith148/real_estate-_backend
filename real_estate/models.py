@@ -26,6 +26,7 @@ class Agent(models.Model):
     rating = models.DecimalField(max_digits=5, decimal_places=2)
     sold =models.IntegerField()
     reviews= models.IntegerField()
+    is_active = models.BooleanField(default=True)
 
     agent_image = models.ImageField(upload_to='agent_images/', null=True)
 

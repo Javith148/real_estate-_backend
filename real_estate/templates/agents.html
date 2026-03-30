@@ -33,35 +33,35 @@
         </div>
 
         <nav class="flex-1 p-4 space-y-1 overflow-y-auto no-scrollbar">
-            <a href="index.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="{% url 'dashboard' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="layout-dashboard" class="w-5 h-5"></i>
                 <span>Dashboard</span>
             </a>
-            <a href="categories.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="{% url 'categories' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="tag" class="w-5 h-5"></i>
                 <span>Property Categories</span>
             </a>
-            <a href="properties.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="{% url 'properties' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="home" class="w-5 h-5"></i>
                 <span>Properties</span>
             </a>
-            <a href="users.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="users" class="w-5 h-5"></i>
                 <span>Users</span>
             </a>
-            <a href="bookings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="calendar" class="w-5 h-5"></i>
                 <span>Bookings</span>
             </a>
-            <a href="orders.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="dollar-sign" class="w-5 h-5"></i>
                 <span>Orders & Payments</span>
             </a>
-            <a href="agents.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors bg-white text-primary">
+            <a href="{% url 'agents' %}" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors bg-white text-primary">
                 <i data-lucide="user-cog" class="w-5 h-5"></i>
                 <span>Agents</span>
             </a>
-            <a href="settings.html" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
+            <a href="" class="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors text-white/80 hover:bg-white/10 hover:text-white">
                 <i data-lucide="settings" class="w-5 h-5"></i>
                 <span>Settings</span>
             </a>
@@ -104,88 +104,158 @@
                         <h1 class="text-2xl font-bold text-primary">Agents Management</h1>
                         <p class="text-gray-600 mt-1">Manage real estate agents and their assignments</p>
                     </div>
+                    <button id="addAgentBtn" class="bg-green-600 hover:bg-green-700 text-white font-medium px-4 py-2 rounded-lg transition-colors flex items-center gap-2">
+                        <i data-lucide="plus" class="w-5 h-5"></i>
+                        Add Agent
+                    </button>
+                </div>
+
+                <!-- Success/Error Messages -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="{% if message.tags %}bg-{{ message.tags }}-100 text-{{ message.tags }}-800 border border-{{ message.tags }}-300{% else %}bg-blue-100 text-blue-800{% endif %} px-4 py-3 rounded-lg flex items-center justify-between">
+                            <span>{{ message }}</span>
+                            <button onclick="this.parentElement.style.display='none'" class="text-xl">&times;</button>
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Add Agent Form (Hidden by default) -->
+                <div id="addAgentForm" class="hidden bg-white p-6 rounded-xl shadow-sm border border-gray-100 mb-6">
+                    <form method="POST" action="{% url 'add_agent' %}" enctype="multipart/form-data">
+                        {% csrf_token %}
+
+                        <h2 class="text-xl font-bold text-primary mb-6">Add New Agent</h2>
+
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+                            <!-- Name -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Name <span class="text-red-500">*</span></label>
+                                <input type="text" name="name" required placeholder="Agent name" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Email -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Email <span class="text-red-500">*</span></label>
+                                <input type="email" name="mail_id" required placeholder="agent@example.com" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Rating -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Rating (0-5) <span class="text-red-500">*</span></label>
+                                <input type="number" name="rating" required min="0" max="5" step="0.1" placeholder="4.5" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Properties Sold -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Properties Sold</label>
+                                <input type="number" name="sold" value="0" min="0" placeholder="0" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Reviews -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Reviews</label>
+                                <input type="number" name="reviews" value="0" min="0" placeholder="0" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                            </div>
+
+                            <!-- Agent Image -->
+                            <div>
+                                <label class="text-sm font-medium text-gray-700">Agent Image</label>
+                                <input type="file" name="agent_image" accept="image/*" class="w-full mt-1 px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                                <p class="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 10MB</p>
+                            </div>
+
+                        </div>
+
+                        <!-- Buttons -->
+                        <div class="mt-6 flex gap-3">
+                            <button type="submit" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-semibold px-6 py-3 rounded-lg transition duration-200">
+                                <i data-lucide="check-circle" class="inline mr-2 w-5 h-5"></i> Save Agent
+                            </button>
+                            <button type="reset" id="cancelAddBtn" class="flex-1 border border-gray-300 hover:bg-gray-50 text-gray-700 font-semibold px-6 py-3 rounded-lg transition duration-200">
+                                <i data-lucide="x" class="inline mr-2 w-5 h-5"></i> Clear Form
+                            </button>
+                        </div>
+                    </form>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <p class="text-sm text-gray-600 mb-1">Total Agents</p>
-                        <h3 class="text-2xl font-bold text-primary">156</h3>
+                        <h3 class="text-2xl font-bold text-primary">{{ total_agents }}</h3>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <p class="text-sm text-gray-600 mb-1">Active Agents</p>
-                        <h3 class="text-2xl font-bold text-green-600">134</h3>
+                        <h3 class="text-2xl font-bold text-green-600">{{ active_agents }}</h3>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <p class="text-sm text-gray-600 mb-1">Average Rating</p>
-                        <h3 class="text-2xl font-bold text-primary">4.7</h3>
+                        <h3 class="text-2xl font-bold text-primary">{{ avg_rating }}</h3>
                     </div>
                     <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                         <p class="text-sm text-gray-600 mb-1">Total Properties</p>
-                        <h3 class="text-2xl font-bold text-primary">1,234</h3>
+                        <h3 class="text-2xl font-bold text-primary">{{ total_properties }}</h3>
                     </div>
                 </div>
 
                 <div class="flex items-center justify-between gap-4">
                     <div class="relative flex-1">
                         <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400"></i>
-                        <input type="text" placeholder="Search agents..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm">
+                        <input type="text" id="agentSearch" placeholder="Search agents..." class="w-full pl-10 pr-4 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm">
                     </div>
                     <div class="flex gap-2">
                         <button id="cardsViewBtn" class="px-4 py-2 bg-primary text-white rounded-lg text-sm font-medium">Cards</button>
-                        <button id="tableViewBtn" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium hover:bg-gray-50">Table</button>
-                        <button class="px-4 py-2 border border-green-600 text-green-600 rounded-lg text-sm font-medium hover:bg-green-50"><i data-lucide="download" class="w-4 h-4"></i></button>
+                        <button id="tableViewBtn" class="px-4 py-2 border border-gray-200 text-gray-600 rounded-lg text-sm font-medium ">Table</button>
+                        <a href="{% url 'export_agents' %}" class="px-4 py-2 border border-green-600 text-green-600 rounded-lg text-sm font-medium hover:bg-green-50 inline-flex items-center gap-2"><i data-lucide="download" class="w-4 h-4"></i> Download</a>
                     </div>
                 </div>
 
                 <!-- Agent Cards View -->
                 <div id="cardsView" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- Agent Card 1 -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden border-2 border-primary/10">
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Robert" class="w-full h-full object-cover">
-                                </div>
-                                <div>
-                                    <h3 class="font-bold text-primary">Robert Williams</h3>
-                                    <div class="flex items-center gap-1 mt-1">
-                                        <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
-                                        <span class="text-sm font-medium">4.8</span>
+                    {% if agents %}
+                        {% for agent in agents %}
+                        <!-- Agent Card -->
+                        <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow {% if not agent.is_active %}opacity-60{% endif %}" data-agent="agent-{{ agent.id }}" data-agent-name="{{ agent.name }}" data-agent-email="{{ agent.mail_id }}">
+                            <div class="flex items-start justify-between mb-4">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden border-2 border-primary/10">
+                                        {% if agent.agent_image %}
+                                            <img src="{{ agent.agent_image.url }}" class="w-full h-full object-cover">
+                                        {% else %}
+                                            <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ agent.name }}" class="w-full h-full object-cover">
+                                        {% endif %}
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-primary">{{ agent.name }}</h3>
+                                        <div class="flex items-center gap-1 mt-1">
+                                            <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+                                            <span class="text-sm font-medium">{{ agent.rating }}</span>
+                                        </div>
                                     </div>
                                 </div>
+                                <a href="{% url 'toggle_agent_status' agent.id %}" class="w-10 h-5 {% if agent.is_active %}bg-green-500{% else %}bg-gray-300{% endif %} rounded-full relative cursor-pointer transition-colors hover:opacity-80">
+                                    <div class="absolute {% if agent.is_active %}right-0.5{% else %}left-0.5{% endif %} top-0.5 w-4 h-4 bg-white rounded-full transition-all"></div>
+                                </a>
                             </div>
-                            <div class="w-10 h-5 bg-green-500 rounded-full relative cursor-pointer"><div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full"></div></div>
-                        </div>
-                        <div class="space-y-2 mb-4 text-sm text-gray-600">
-                            <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> Miami, FL</div>
-                            <div class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-gray-400"></i> robert.w@realestate.com</div>
-                            <div class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-gray-400"></i> +1 (555) 111-2222</div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t">
-                            <div><p class="text-xs text-gray-500">Properties</p><p class="font-bold text-primary text-sm">45</p></div>
-                            <span class="px-2 py-1 bg-green-100 text-green-800 text-[10px] font-bold rounded-full uppercase">Active</span>
-                        </div>
-                    </div>
-                    <!-- Agent Card 2 -->
-                    <div class="bg-white p-6 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow">
-                        <div class="flex items-start justify-between mb-4">
-                            <div class="flex items-center gap-3">
-                                <div class="w-14 h-14 rounded-full bg-primary flex items-center justify-center text-white font-bold overflow-hidden border-2 border-primary/10">
-                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Jennifer" class="w-full h-full object-cover">
+                            <div class="space-y-2 mb-4 text-sm text-gray-600">
+                                <div class="flex items-center gap-2"><i data-lucide="mail" class="w-4 h-4 text-gray-400"></i> {{ agent.mail_id }}</div>
+                                <div class="flex items-center gap-2"><i data-lucide="message-square" class="w-4 h-4 text-gray-400"></i> {{ agent.reviews }} reviews</div>
+                            </div>
+                            <div class="flex items-center justify-between pt-4 border-t">
+                                <div><p class="text-xs text-gray-500">Properties Sold</p><p class="font-bold text-primary text-sm">{{ agent.sold }}</p></div>
+                                <div class="flex gap-2">
+                                    <a href="{% url 'edit_agent' agent.id %}" class="px-3 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded-lg transition">Edit</a>
+                                    <a href="{% url 'delete_agent' agent.id %}" onclick="return confirm('Are you sure you want to delete this agent?');" class="px-3 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded-lg transition">Delete</a>
                                 </div>
-                                <div><h3 class="font-bold text-primary">Jennifer Davis</h3><div class="flex items-center gap-1 mt-1"><i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i><span class="text-sm font-medium">4.9</span></div></div>
                             </div>
-                            <div class="w-10 h-5 bg-green-500 rounded-full relative cursor-pointer"><div class="absolute right-0.5 top-0.5 w-4 h-4 bg-white rounded-full"></div></div>
                         </div>
-                        <div class="space-y-2 mb-4 text-sm text-gray-600">
-                            <div class="flex items-center gap-2"><i data-lucide="map-pin" class="w-4 h-4 text-gray-400"></i> New York, NY</div>
-                            <div class="flex items-center gap-2"><i data-lucide="phone" class="w-4 h-4 text-gray-400"></i> +1 (555) 222-3333</div>
-                        </div>
-                        <div class="flex items-center justify-between pt-4 border-t">
-                            <div><p class="text-xs text-gray-500">Properties</p><p class="font-bold text-primary text-sm">62</p></div>
-                            <span class="px-2 py-1 bg-green-100 text-green-800 text-[10px] font-bold rounded-full uppercase">Active</span>
-                        </div>
+                        {% endfor %}
+                    {% else %}
+                    <div class="col-span-full text-center py-12">
+                        <p class="text-gray-600">No agents found</p>
                     </div>
+                    {% endif %}
                 </div>
 
                 <!-- Agent Table View (Hidden by default) -->
@@ -193,15 +263,51 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-gray-50 border-b border-gray-100 text-xs font-semibold text-gray-600 uppercase">
-                                <th class="px-4 py-3">Agent</th><th class="px-4 py-3">Location</th><th class="px-4 py-3 text-center">Properties</th><th class="px-4 py-3">Status</th>
+                                <th class="px-4 py-3">Agent</th><th class="px-4 py-3">Email</th><th class="px-4 py-3 text-center">Properties Sold</th><th class="px-4 py-3">Rating</th><th class="px-4 py-3">Status</th><th class="px-4 py-3">Actions</th>
                             </tr>
                         </thead>
                         <tbody class="divide-y divide-gray-50 text-sm">
-                            <tr>
-                                <td class="px-4 py-4"><div class="flex items-center gap-3"><div class="w-8 h-8 rounded-full bg-primary"></div>Robert Williams</div></td>
-                                <td class="px-4 py-4">Miami, FL</td><td class="px-4 py-4 text-center">45</td>
-                                <td class="px-4 py-4"><span class="px-2 py-0.5 bg-green-100 text-green-800 text-[10px] rounded-full uppercase">Active</span></td>
+                            {% if agents %}
+                                {% for agent in agents %}
+                                <tr class="{% if not agent.is_active %}opacity-60{% endif %}" data-agent="agent-{{ agent.id }}" data-agent-name="{{ agent.name }}" data-agent-email="{{ agent.mail_id }}">
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center gap-3">
+                                            <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-white text-xs font-bold overflow-hidden">
+                                                {% if agent.agent_image %}
+                                                    <img src="{{ agent.agent_image.url }}" class="w-full h-full object-cover">
+                                                {% else %}
+                                                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed={{ agent.name }}" class="w-full h-full object-cover">
+                                                {% endif %}
+                                            </div>
+                                            {{ agent.name }}
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4">{{ agent.mail_id }}</td>
+                                    <td class="px-4 py-4 text-center">{{ agent.sold }}</td>
+                                    <td class="px-4 py-4">
+                                        <div class="flex items-center gap-1">
+                                            <i data-lucide="star" class="w-4 h-4 fill-yellow-400 text-yellow-400"></i>
+                                            {{ agent.rating }}
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <a href="{% url 'toggle_agent_status' agent.id %}" class="inline-block w-10 h-5 {% if agent.is_active %}bg-green-500{% else %}bg-gray-300{% endif %} rounded-full relative cursor-pointer transition-colors hover:opacity-80">
+                                            <div class="absolute {% if agent.is_active %}right-0.5{% else %}left-0.5{% endif %} top-0.5 w-4 h-4 bg-white rounded-full transition-all"></div>
+                                        </a>
+                                    </td>
+                                    <td class="px-4 py-4">
+                                        <div class="flex gap-2">
+                                            <a href="{% url 'edit_agent' agent.id %}" class="px-2 py-1 bg-blue-100 hover:bg-blue-200 text-blue-700 text-xs font-medium rounded transition">Edit</a>
+                                            <a href="{% url 'delete_agent' agent.id %}" onclick="return confirm('Are you sure you want to delete this agent?');" class="px-2 py-1 bg-red-100 hover:bg-red-200 text-red-700 text-xs font-medium rounded transition">Delete</a>
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            {% else %}
+                            <tr data-no-results>
+                                <td class="px-4 py-4 text-center col-span-6 text-gray-600">No agents found</td>
                             </tr>
+                            {% endif %}
                         </tbody>
                     </table>
                 </div>
@@ -215,8 +321,75 @@
         const sidebar = document.getElementById('sidebar');
         sidebarToggle.addEventListener('click', (e) => { e.stopPropagation(); sidebar.classList.toggle('-translate-x-full'); });
         
+        // Add Agent Form Toggle
+        const addBtn = document.getElementById('addAgentBtn');
+        const cancelBtn = document.getElementById('cancelAddBtn');
+        const form = document.getElementById('addAgentForm');
+
+        addBtn.addEventListener('click', () => {
+            form.classList.toggle('hidden');
+            form.scrollIntoView({ behavior: 'smooth' });
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            form.classList.add('hidden');
+        });
+
+        // Agent Search Functionality
+        const agentSearch = document.getElementById('agentSearch');
         const cardsView = document.getElementById('cardsView');
         const tableView = document.getElementById('tableView');
+
+        agentSearch.addEventListener('input', (e) => {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            // Search in cards view
+            const cardAgents = cardsView.querySelectorAll('[data-agent]');
+            let visibleCards = 0;
+            cardAgents.forEach(card => {
+                const agentName = card.getAttribute('data-agent-name').toLowerCase();
+                const agentEmail = card.getAttribute('data-agent-email').toLowerCase();
+                
+                if (agentName.includes(searchTerm) || agentEmail.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCards++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show "no results" message for cards
+            const noCardsMsg = cardsView.querySelector('.col-span-full');
+            if (visibleCards === 0) {
+                if (noCardsMsg) noCardsMsg.style.display = '';
+            } else {
+                if (noCardsMsg) noCardsMsg.style.display = 'none';
+            }
+
+            // Search in table view
+            const tableRows = tableView.querySelectorAll('tbody tr');
+            let visibleRows = 0;
+            tableRows.forEach(row => {
+                const agentName = row.getAttribute('data-agent-name').toLowerCase();
+                const agentEmail = row.getAttribute('data-agent-email').toLowerCase();
+                
+                if (agentName.includes(searchTerm) || agentEmail.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleRows++;
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Show "no results" message for table
+            const noTableMsg = tableView.querySelector('tr[data-no-results]');
+            if (visibleRows === 0 && tableRows.length > 0) {
+                if (noTableMsg) noTableMsg.style.display = '';
+            } else {
+                if (noTableMsg) noTableMsg.style.display = 'none';
+            }
+        });
+        
         const cardsBtn = document.getElementById('cardsViewBtn');
         const tableBtn = document.getElementById('tableViewBtn');
 
